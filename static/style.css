@@ -1,0 +1,124 @@
+/* =========================
+   DEFAULT LIGHT THEME
+========================= */
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f9;
+    color: #222;
+    transition: all 0.3s ease;
+}
+
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #1e3a8a;
+    padding: 12px 25px;
+    color: white;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    margin-right: 15px;
+}
+
+.brand {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.logout-btn {
+    background: #ef4444;
+    padding: 6px 12px;
+    border-radius: 5px;
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.content {
+    padding: 25px;
+}
+
+/* =========================
+   FLASH MESSAGE
+========================= */
+
+.flash {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.flash.success { background: #d1fae5; }
+.flash.error { background: #fee2e2; }
+
+/* =========================
+   NOTIFICATION
+========================= */
+
+.notification-wrapper {
+    position: relative;
+    margin-right: 15px;
+    cursor: pointer;
+}
+
+.notification-icon {
+    font-size: 20px;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -6px;
+    right: -10px;
+    background: red;
+    color: white;
+    font-size: 12px;
+    padding: 3px 6px;
+    border-radius: 50%;
+}
+
+/* =========================
+   THEME BUTTON
+========================= */
+
+.theme-btn {
+    margin-right: 15px;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/* =========================
+   DARK THEME
+========================= */
+
+body.dark-mode {
+    background-color: #121212;
+    color: #e4e4e4;
+}
+
+body.dark-mode .navbar {
+    background: #111827;
+}
+
+body.dark-mode .flash.success {
+    background: #064e3b;
+}
+
+body.dark-mode .flash.error {
+    background: #7f1d1d;
+}
+
+body.dark-mode .logout-btn {
+    background: #dc2626;
+}
