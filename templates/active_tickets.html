@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Active Tickets</title>
+    <style>
+        body { font-family: Arial; padding: 30px; background: #f4f6f9; }
+        .ticket { background: white; padding: 20px; margin-bottom: 20px; border-radius: 10px; }
+        .sla-good { color: green; }
+        .sla-warning { color: orange; }
+        .sla-bad { color: red; }
+        select, button { padding: 5px; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+<h2>📂 Active Tickets</h2>
+
+{% if not tickets %}
+    <p>No active tickets available.</p>
+{% endif %}
+
+{% for ticket in tickets %}
+<div class="ticket">
+    <h3>🎫 Ticket #{{ ticket.id }} — {{ ticket.priority.upper() }}</h3>
+
+    <p><strong>Description:</strong> {{ ticket.description }}</p>
+
+    <!-- SLA CALCULATION -->
+    {% set hours = ((now - ticket.date_created).total_seconds() / 3600) %}
+
+    {% if hours < 2 %}
+        <p class="sla-good">⏱ {{ "%.1f"|format(hours) }} hrs — Within SLA</p>
+    {% elif hours < 6 %}
+        <p class="sla-warning">⏱ {{ "%.1f"|format(hours) }} hrs — Approaching SLA</p>
+    {% else %}
+        <p class="sla-bad">⏱ {{ "%.1f"|format(hours) }} hrs — SLA Breached</p>
+    {% endif %}
+
+    <!-- STATUS UPDATE FORM -->
+    <form method="POST">
+        <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
+
+        <label>Update Status:</label>
+        <select name="status">
+            <option {% if ticket.status == "Open" %}selected{% endif %}>Open</option>
+            <option {% if ticket.status == "In Progress" %}selected{% endif %}>In Progress</option>
+            <option {% if ticket.status == "Resolved" %}selected{% endif %}>Resolved</option>
+            <option {% if ticket.status == "Closed" %}selected{% endif %}>Closed</option>
+        </select>
+
+        <button type="submit">💾 Save</button>
+    </form>
+
+    <!-- DEVELOPER MODE -->
+    <details>
+        <summary>🧾 View Ticket JSON</summary>
+        <pre>
+{
+  "id": {{ ticket.id }},
+  "title": "{{ ticket.title }}",
+  "description": "{{ ticket.description }}",
+  "category": "{{ ticket.category }}",
+  "priority": "{{ ticket.priority }}",
+  "status": "{{ ticket.status }}",
+  "created_at": "{{ ticket.date_created }}",
+  "updated_at": "{{ ticket.updated_at }}"
+}
+        </pre>
+    </details>
+
+</div>
+{% endfor %}
+
+</body>
+</html>
