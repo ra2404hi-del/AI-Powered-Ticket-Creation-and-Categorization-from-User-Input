@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+body {
+    background: #f4f6fb;
+    font-family: "Segoe UI", sans-serif;
+}
+
+.ticket-card {
+    width: 95%;
+    max-width: 600px;
+    margin: 60px auto;
+    background: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.ticket-card h2 {
+    margin-bottom: 25px;
+    color: #0d6efd;
+    text-align: center;
+}
+
+.ticket-card input,
+.ticket-card textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: none;
+    border-bottom: 2px solid #ddd;
+    font-size: 15px;
+    transition: border 0.3s;
+}
+
+.ticket-card input:focus,
+.ticket-card textarea:focus {
+    border-bottom: 2px solid #0d6efd;
+    outline: none;
+}
+
+.ticket-card button {
+    padding: 14px;
+    width: 60%;
+    background: #0d6efd;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.ticket-card button:hover {
+    background: #084298;
+}
+
+#message{
+margin-top:15px;
+font-weight:bold;
+color:green;
+text-align:center;
+}
+</style>
+
+<div class="ticket-card">
+
+<h2>Create Ticket</h2>
+
+<form id="ticketForm">
+
+<input type="text" id="title" placeholder="Ticket Title" required>
+
+<textarea id="description" placeholder="Description" required></textarea>
+
+<button type="submit">Create Ticket</button>
+
+</form>
+
+<p id="message"></p>
+
+</div>
+
+<script>
+
+document.getElementById("ticketForm").addEventListener("submit", function(e){
+
+e.preventDefault()
+
+let title = document.getElementById("title").value
+let description = document.getElementById("description").value
+
+fetch("/api/create-ticket",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body: JSON.stringify({
+title:title,
+description:description
+})
+
+})
+
+.then(response => response.json())
+
+.then(data =>{
+
+document.getElementById("message").innerHTML = data.message
+
+setTimeout(function(){
+
+window.location="/active-tickets"
+
+},1500)
+
+})
+
+})
+
+</script>
+
+{% endblock %}

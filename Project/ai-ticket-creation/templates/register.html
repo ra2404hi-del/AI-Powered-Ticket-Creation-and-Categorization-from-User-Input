@@ -1,0 +1,282 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+
+body{
+background:linear-gradient(white,white);
+font-family:Arial;
+}
+
+.auth-container{
+width:420px;
+margin:50px auto;
+padding:30px 35px;
+border-radius:18px;
+background:rgba(207,235,242,0.94);
+backdrop-filter:blur(12px);
+box-shadow:0 0 20px #bcf4f4e6;
+animation:fadeIn 1s ease;
+}
+
+.auth-container h2{
+text-align:center;
+margin-bottom:25px;
+}
+
+.auth-container input,
+.auth-container select{
+width:100%;
+padding:12px;
+margin:10px 0;
+border-radius:8px;
+border:none;
+outline:none;
+}
+
+.error{
+color:red;
+font-size:12px;
+}
+
+.checkbox{
+margin:10px 0;
+font-size:14px;
+}
+
+.auth-container button{
+width:100%;
+padding:12px;
+border-radius:10px;
+border:none;
+background:black;
+color:white;
+font-size:16px;
+cursor:pointer;
+margin-top:10px;
+transition:0.3s;
+}
+
+.auth-container button:hover{
+transform:scale(1.05);
+}
+
+.extra-links{
+text-align:center;
+margin-top:15px;
+}
+
+.extra-links a{
+color:#0f0f0f;
+text-decoration:none;
+font-weight:bold;
+}
+
+@keyframes fadeIn{
+from{opacity:0; transform:translateY(30px);}
+to{opacity:1; transform:translateY(0);}
+}
+
+.toggle{
+position:absolute;
+right:10px;
+top:10px;
+cursor:pointer;
+}
+
+</style>
+
+<div class="auth-container">
+
+<h2>Register</h2>
+
+<form method="POST" onsubmit="return validateForm()">
+
+<input type="text" id="fullname" name="fullname" placeholder="Full Name" onkeyup="validateName()" required>
+<div class="error" id="nameError"></div>
+
+<input type="text" id="username" name="username" placeholder="Username" onkeyup="validateUsername()" required>
+<div class="error" id="usernameError"></div>
+
+<input type="email" id="email" name="email" placeholder="Email" onkeyup="validateEmail()" required>
+<div class="error" id="emailError"></div>
+
+<input type="tel" id="phone" name="phone" placeholder="Phone Number" onkeyup="validatePhone()" required>
+<div class="error" id="phoneError"></div>
+
+<input type="password" id="password" name="password" placeholder="Password" onkeyup="validatePassword()" required>
+<div class="error" id="passError"></div>
+
+<input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password" onkeyup="validateConfirm()" required>
+<div class="error" id="confirmError"></div>
+
+<select id="role" name="role" onchange="validateRole()" required>
+<option value="">Select Role</option>
+<option>User</option>
+<option>Support Staff</option>
+<option>Admin</option>
+</select>
+<div class="error" id="roleError"></div>
+
+<div class="checkbox">
+<input type="checkbox" id="terms"> I agree to Terms & Conditions
+<div class="error" id="termsError"></div>
+</div>
+
+<button type="submit">Register</button>
+
+</form>
+
+<div class="extra-links">
+Already have account?
+<a href="{{ url_for('login') }}">Login</a>
+</div>
+
+</div>
+
+<script>
+
+/* Name validation */
+
+function validateName(){
+let name=document.getElementById("fullname").value;
+let error=document.getElementById("nameError");
+
+let pattern=/^[A-Za-z ]{3,}$/;
+
+if(!pattern.test(name)){
+error.innerHTML="Enter valid full name (min 3 letters)";
+return false;
+}
+
+error.innerHTML="";
+return true;
+}
+
+/* Username */
+
+function validateUsername(){
+let username=document.getElementById("username").value;
+let error=document.getElementById("usernameError");
+
+if(username.length<3){
+error.innerHTML="Username must be at least 3 characters";
+return false;
+}
+
+error.innerHTML="";
+return true;
+}
+
+/* Email */
+
+function validateEmail(){
+let email=document.getElementById("email").value;
+let error=document.getElementById("emailError");
+
+let pattern=/^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+
+if(!pattern.test(email)){
+error.innerHTML="Invalid email";
+return false;
+}
+
+error.innerHTML="";
+return true;
+}
+
+/* Phone */
+
+function validatePhone(){
+let phone=document.getElementById("phone").value;
+let error=document.getElementById("phoneError");
+
+let pattern=/^[0-9]{10}$/;
+
+if(!pattern.test(phone)){
+error.innerHTML="Phone must be 10 digits";
+return false;
+}
+
+error.innerHTML="";
+return true;
+}
+
+/* Password */
+
+function validatePassword(){
+let password=document.getElementById("password").value;
+let error=document.getElementById("passError");
+
+let strong=/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$/;
+
+if(!strong.test(password)){
+error.innerHTML="Password must contain letters & numbers (min 6)";
+return false;
+}
+
+error.innerHTML="";
+return true;
+}
+
+/* Confirm Password */
+
+function validateConfirm(){
+let pass=document.getElementById("password").value;
+let confirm=document.getElementById("confirm_password").value;
+let error=document.getElementById("confirmError");
+
+if(pass!==confirm){
+error.innerHTML="Passwords do not match";
+return false;
+}
+
+error.innerHTML="";
+return true;
+}
+
+/* Role */
+
+function validateRole(){
+let role=document.getElementById("role").value;
+let error=document.getElementById("roleError");
+
+if(role===""){
+error.innerHTML="Please select role";
+return false;
+}
+
+error.innerHTML="";
+return true;
+}
+
+/* Final form validation */
+
+function validateForm(){
+
+if(!validateName() ||
+!validateUsername() ||
+!validateEmail() ||
+!validatePhone() ||
+!validatePassword() ||
+!validateConfirm() ||
+!validateRole()){
+return false;
+}
+
+let terms=document.getElementById("terms");
+let error=document.getElementById("termsError");
+
+if(!terms.checked){
+error.innerHTML="You must accept terms";
+return false;
+}
+
+error.innerHTML="";
+return true;
+
+}
+
+</script>
+
+{% endblock %}

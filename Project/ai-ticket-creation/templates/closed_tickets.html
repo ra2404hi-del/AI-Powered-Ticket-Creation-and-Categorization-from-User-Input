@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+
+.table-container{
+margin-top:20px;
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 5px 15px rgba(0,0,0,0.08);
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th{
+background:#0d6efd;
+color:white;
+padding:12px;
+text-align:left;
+}
+
+td{
+padding:12px;
+border-bottom:1px solid #eee;
+}
+
+tr:hover{
+background:#f5f9ff;
+}
+
+/* Priority colors */
+
+.high{
+color:#dc3545;
+font-weight:bold;
+}
+
+.medium{
+color:#ffc107;
+font-weight:bold;
+}
+
+.low{
+color:#198754;
+font-weight:bold;
+}
+
+.no-data{
+padding:20px;
+text-align:center;
+}
+
+.refresh-note{
+margin-top:10px;
+font-size:14px;
+color:gray;
+}
+
+</style>
+
+<h2>🗄 Closed Tickets</h2>
+
+<div class="table-container">
+
+<table>
+
+<thead>
+<tr>
+<th>ID</th>
+<th>Title</th>
+<th>Category</th>
+<th>Priority</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody id="ticketBody">
+
+<tr>
+<td colspan="5" class="no-data">Loading tickets...</td>
+</tr>
+
+</tbody>
+
+</table>
+
+<div class="refresh-note">
+Auto refresh every 5 seconds
+</div>
+
+</div>
+
+<script>
+
+function loadClosedTickets(){
+
+fetch("/api/closed-tickets")
+
+.then(response => response.json())
+
+.then(data => {
+
+let table = document.getElementById("ticketBody")
+
+if(data.length === 0){
+
+table.innerHTML = `
+<tr>
+<td colspan="5" class="no-data">No closed tickets available</td>
+</tr>
+`
+
+return
+}
+
+let rows = ""
+
+data.forEach(ticket => {
+
+let priorityClass = ""
+
+if(ticket.priority === "High"){
+priorityClass = "high"
+}
+else if(ticket.priority === "Medium"){
+priorityClass = "medium"
+}
+else{
+priorityClass = "low"
+}
+
+rows += `
+<tr>
+
+<td>#${ticket.id}</td>
+
+<td>${ticket.title}</td>
+
+<td>${ticket.category}</td>
+
+<td class="${priorityClass}">
+${ticket.priority}
+</td>
+
+<td>Closed</td>
+
+</tr>
+`
+})
+
+table.innerHTML = rows
+
+})
+
+}
+
+// Load tickets first time
+loadClosedTickets()
+
+// Refresh every 5 seconds
+setInterval(loadClosedTickets, 5000)
+
+</script>
+
+{% endblock %}

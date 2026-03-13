@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+
+body{
+font-family:Arial;
+padding:30px;
+background:#f4f6f9;
+}
+
+/* Ticket Card */
+
+.ticket{
+background:white;
+padding:20px;
+margin-bottom:20px;
+border-radius:10px;
+box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+select,button{
+padding:6px;
+margin-top:5px;
+border-radius:5px;
+border:1px solid #ccc;
+}
+
+button{
+background:#007bff;
+color:white;
+border:none;
+cursor:pointer;
+}
+
+button:hover{
+background:#0056b3;
+}
+
+</style>
+
+<h2>📂 Active Tickets</h2>
+
+<div id="tickets-container">
+<p>Loading tickets...</p>
+</div>
+
+<script>
+
+fetch("/api/active-tickets")
+.then(response => response.json())
+.then(data => {
+
+let container = document.getElementById("tickets-container")
+
+if(data.length === 0){
+container.innerHTML = "<p>No active tickets available.</p>"
+return
+}
+
+let html = ""
+
+data.forEach(ticket => {
+
+html += `
+<div class="ticket">
+
+<h3>🎫 Ticket #${ticket.id}</h3>
+
+<p><strong>Title:</strong> ${ticket.title}</p>
+
+<p><strong>Description:</strong> ${ticket.description}</p>
+
+<p><strong>Status:</strong> ${ticket.status}</p>
+
+<form method="POST" action="/api/update-status">
+
+<input type="hidden" name="ticket_id" value="${ticket.id}">
+
+<label><strong>Update Status:</strong></label>
+
+<select name="status">
+
+<option ${ticket.status=="Open"?"selected":""}>Open</option>
+<option ${ticket.status=="In Progress"?"selected":""}>In Progress</option>
+<option ${ticket.status=="Resolved"?"selected":""}>Resolved</option>
+<option ${ticket.status=="Closed"?"selected":""}>Closed</option>
+
+</select>
+
+<button type="submit">💾 Save</button>
+
+</form>
+
+<details style="margin-top:10px;">
+
+<summary>🧾 View Ticket JSON</summary>
+
+<pre>
+{
+"id": ${ticket.id},
+"title": "${ticket.title}",
+"description": "${ticket.description}",
+"status": "${ticket.status}"
+}
+</pre>
+
+</details>
+
+</div>
+`
+
+})
+
+container.innerHTML = html
+
+})
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,429 @@
+{% extends "base.html" %}
+{% block content %}
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+:root{
+--primary:#2563eb;
+--secondary:#1e40af;
+--text:#1f2937;
+--light:#f9fafb;
+}
+
+body{
+font-family:'Poppins',sans-serif;
+background:white;
+color:var(--text);
+margin:0;
+}
+
+/* HERO */
+
+.hero{
+padding:120px 10%;
+display:flex;
+align-items:center;
+justify-content:space-between;
+flex-wrap:wrap;
+background:linear-gradient(135deg,#ffffff,#eef5ff);
+}
+
+.hero-text{
+flex:1;
+min-width:300px;
+max-width:500px;
+}
+
+.hero-text h1{
+font-size:52px;
+color:var(--primary);
+font-weight:700;
+}
+
+.hero-text p{
+font-size:18px;
+margin:20px 0;
+line-height:1.6;
+}
+
+.hero-buttons a{
+padding:14px 32px;
+border-radius:8px;
+text-decoration:none;
+margin-right:15px;
+transition:all .25s ease;
+font-weight:500;
+}
+
+.btn-primary{
+background:var(--primary);
+color:white;
+}
+
+.btn-primary:hover{
+transform:translateY(-2px);
+box-shadow:0 8px 20px rgba(0,0,0,.15);
+background:var(--secondary);
+}
+
+.btn-secondary{
+background:white;
+color:var(--primary);
+border:2px solid var(--primary);
+}
+
+.btn-secondary:hover{
+background:var(--primary);
+color:white;
+}
+
+.hero-image{
+flex:1;
+text-align:center;
+}
+
+.hero-image img{
+width:90%;
+max-width:420px;
+animation:float 3s ease-in-out infinite;
+}
+
+@keyframes float{
+0%{transform:translateY(0)}
+50%{transform:translateY(-15px)}
+100%{transform:translateY(0)}
+}
+
+/* HOW IT WORKS */
+
+.how-it-works{
+padding:100px 10%;
+background:#f7f9fc;
+}
+
+.section-title{
+text-align:center;
+font-size:36px;
+margin-bottom:50px;
+color:var(--primary);
+}
+
+.steps{
+max-width:800px;
+margin:auto;
+}
+
+.step{
+background:white;
+border-radius:10px;
+margin-bottom:20px;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+cursor:pointer;
+transition:0.3s;
+overflow:hidden;
+}
+
+.step:hover{
+transform:translateY(-3px);
+}
+
+.step-header{
+display:flex;
+align-items:center;
+padding:20px;
+}
+
+.number{
+width:40px;
+height:40px;
+border-radius:50%;
+background:var(--primary);
+color:white;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:bold;
+margin-right:15px;
+}
+
+.step-content{
+max-height:0;
+overflow:hidden;
+padding:0 20px;
+transition:max-height .4s ease;
+}
+
+.step.active .step-content{
+max-height:200px;
+padding:20px;
+}
+
+/* INTRO */
+
+.intro{
+padding:100px 10%;
+text-align:center;
+}
+
+.intro h2{
+color:var(--primary);
+font-size:34px;
+margin-bottom:20px;
+}
+
+/* FEATURES */
+
+.features{
+padding:80px 10%;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:40px;
+text-align:center;
+}
+
+.feature-box{
+padding:40px;
+border-radius:15px;
+background:white;
+box-shadow:0 5px 20px rgba(0,0,0,.05);
+transition:.3s;
+}
+
+.feature-box:hover{
+transform:translateY(-10px);
+box-shadow:0 10px 30px rgba(0,0,0,.15);
+}
+
+.feature-box i{
+font-size:28px;
+color:white;
+background:var(--primary);
+padding:18px;
+border-radius:50%;
+margin-bottom:20px;
+}
+
+/* CTA */
+
+.cta{
+padding:100px 10%;
+background:var(--primary);
+color:white;
+text-align:center;
+}
+
+.cta a{
+background:white;
+color:var(--primary);
+padding:14px 32px;
+border-radius:8px;
+text-decoration:none;
+font-weight:bold;
+}
+
+/* FOOTER */
+
+.footer{
+text-align:center;
+padding:30px;
+background:var(--secondary);
+color:white;
+}
+
+@media(max-width:900px){
+
+.hero{
+text-align:center;
+}
+
+.hero-text{
+margin-bottom:40px;
+}
+
+}
+
+</style>
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+<div class="hero-text">
+
+<h1>Smart AI HelpDesk Platform</h1>
+
+<p>
+Automate ticket creation, intelligent categorization, and priority detection 
+with our modern AI-powered support system.
+</p>
+
+<div class="hero-buttons">
+
+{% if session.get('user_id') %}
+<a href="{{ url_for('create_ticket') }}" class="btn-primary">Create Ticket</a>
+<a href="{{ url_for('dashboard') }}" class="btn-secondary">View Dashboard</a>
+{% else %}
+<a href="{{ url_for('register') }}" class="btn-primary">Get Started</a>
+<a href="{{ url_for('login') }}" class="btn-secondary">Login</a>
+{% endif %}
+
+</div>
+</div>
+
+<div class="hero-image">
+<img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png">
+</div>
+
+</section>
+
+
+<!-- HOW IT WORKS -->
+
+<section class="how-it-works">
+
+<h2 class="section-title">How AI HelpDesk Works</h2>
+
+<div class="steps">
+
+<div class="step" onclick="toggleStep(this)">
+<div class="step-header">
+<span class="number">1</span>
+<h3>Submit Issue</h3>
+</div>
+<div class="step-content">
+<p>User creates a support ticket by describing their problem.</p>
+</div>
+</div>
+
+<div class="step" onclick="toggleStep(this)">
+<div class="step-header">
+<span class="number">2</span>
+<h3>AI Categorization</h3>
+</div>
+<div class="step-content">
+<p>The system analyzes keywords and assigns a ticket category automatically.</p>
+</div>
+</div>
+
+<div class="step" onclick="toggleStep(this)">
+<div class="step-header">
+<span class="number">3</span>
+<h3>Priority Detection</h3>
+</div>
+<div class="step-content">
+<p>Urgent keywords trigger higher priority levels.</p>
+</div>
+</div>
+
+<div class="step" onclick="toggleStep(this)">
+<div class="step-header">
+<span class="number">4</span>
+<h3>Admin Review</h3>
+</div>
+<div class="step-content">
+<p>Support staff manage tickets from the dashboard.</p>
+</div>
+</div>
+
+<div class="step" onclick="toggleStep(this)">
+<div class="step-header">
+<span class="number">5</span>
+<h3>Issue Resolution</h3>
+</div>
+<div class="step-content">
+<p>The issue is solved and the ticket status is updated.</p>
+</div>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- INTRO -->
+
+<section class="intro">
+
+<h2>Built for Modern Support Teams</h2>
+
+<p>
+The AI-Based Ticket Creation and Categorization System analyzes user issues and automatically generates support tickets with intelligent category classification.
+</p>
+
+</section>
+
+
+<!-- FEATURES -->
+
+<section class="features">
+
+<div class="feature-box">
+<i class="fas fa-robot"></i>
+<h3>AI Categorization</h3>
+<p>Smart keyword detection assigns categories instantly.</p>
+</div>
+
+<div class="feature-box">
+<i class="fas fa-bolt"></i>
+<h3>Priority Detection</h3>
+<p>Identify urgent issues faster.</p>
+</div>
+
+<div class="feature-box">
+<i class="fas fa-chart-line"></i>
+<h3>Analytics Dashboard</h3>
+<p>Track ticket metrics visually.</p>
+</div>
+
+<div class="feature-box">
+<i class="fas fa-shield-alt"></i>
+<h3>Secure System</h3>
+<p>Protected authentication and storage.</p>
+</div>
+
+</section>
+
+
+<!-- CTA -->
+
+<section class="cta">
+
+<h2>Ready to Transform Your Support System?</h2>
+<p>Start using AI-powered automation today.</p>
+
+<a href="{{ url_for('register') }}">Create Free Account</a>
+
+</section>
+
+
+<!-- FOOTER -->
+
+<div class="footer">
+<p>© 2026 AI HelpDesk</p>
+<p>AI Ticket Creation & Categorization System</p>
+</div>
+
+
+<script>
+
+function toggleStep(step){
+
+const allSteps = document.querySelectorAll(".step");
+
+allSteps.forEach(s=>{
+if(s !== step){
+s.classList.remove("active");
+}
+});
+
+step.classList.toggle("active");
+
+}
+
+</script>
+
+{% endblock %}

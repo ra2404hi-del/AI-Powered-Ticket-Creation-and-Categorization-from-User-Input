@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+body {
+    background: #f4f8ff;
+}
+
+.dashboard-container {
+    padding: 40px;
+}
+
+/* Header */
+.dashboard-header {
+    background: linear-gradient(135deg, #0d6efd, #3a8bfd);
+    color: white;
+    padding: 30px;
+    border-radius: 15px;
+    margin-bottom: 40px;
+    box-shadow: 0 10px 30px rgba(13, 110, 253, 0.2);
+}
+
+/* Cards Container */
+.cards-container {
+    padding: 50px;
+    background: #f2f2f2;
+    border-radius: 10px;
+}
+
+/* Grid Layout */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+}
+
+/* Card Style */
+.custom-card {
+    background: hsl(199, 66%, 82%);
+    padding: 50px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 8px 15px rgba(24, 120, 222, 0.1);
+    transition: 0.3s;
+}
+
+.custom-card:hover {
+    transform: translateY(-10px);
+}
+
+.custom-card h3{
+    margin-bottom:10px;
+}
+
+.custom-card p{
+    font-size:28px;
+    font-weight:bold;
+}
+
+/* Quick Actions */
+.section-title {
+    margin: 30px 0 20px;
+    color: #0d6efd;
+}
+
+.quick-actions {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    text-align: center;
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.primary {
+    background: #0d6efd;
+    color: white;
+}
+
+.primary:hover {
+    background: #084ec1;
+}
+
+.outline {
+    border: 2px solid #0d6efd;
+    color: #0d6efd;
+}
+
+.outline:hover {
+    background: #0d6efd;
+    color: white;
+}
+
+/* Alerts */
+.alert {
+    border-radius: 12px;
+    padding: 15px;
+    margin-top:10px;
+}
+
+.alert-danger {
+    background: #ffe5e5;
+    border-left: 6px solid #dc3545;
+}
+
+.alert-success {
+    background: #e6f4ff;
+    border-left: 6px solid #0d6efd;
+}
+
+.alert-info {
+    background: #eef6ff;
+    border-left: 6px solid #0dcaf0;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+.cards-grid {
+grid-template-columns: repeat(2,1fr);
+}
+}
+
+@media (max-width: 500px) {
+.cards-grid {
+grid-template-columns: 1fr;
+}
+}
+</style>
+
+<div class="dashboard-container">
+
+<!-- HEADER -->
+<div class="dashboard-header">
+<h2>📊 Ticket Analytics Dashboard</h2>
+<p>Real-time overview of support workload</p>
+</div>
+
+<!-- METRICS -->
+<div class="cards-container">
+
+<div class="cards-grid">
+
+<div class="custom-card">
+<h3>Total Tickets</h3>
+<p id="total">0</p>
+</div>
+
+<div class="custom-card">
+<h3>Open Tickets</h3>
+<p id="open">0</p>
+</div>
+
+<div class="custom-card">
+<h3>High Priority</h3>
+<p id="high">0</p>
+</div>
+
+<div class="custom-card">
+<h3>Closed Tickets</h3>
+<p id="closed">0</p>
+</div>
+
+</div>
+
+</div>
+
+<!-- QUICK ACTIONS -->
+<h4 class="section-title">🚀 Quick Actions</h4>
+
+<div class="quick-actions">
+
+<a href="{{ url_for('create_ticket') }}" class="action-btn primary">
+➕ Create Ticket
+</a>
+
+<a href="{{ url_for('active_tickets') }}" class="action-btn outline">
+📂 View Active Tickets
+</a>
+
+<a href="{{ url_for('closed_tickets') }}" class="action-btn outline">
+🗄 View Closed Tickets
+</a>
+
+</div>
+
+<!-- SYSTEM INSIGHTS -->
+<h4 class="section-title">📈 System Insights</h4>
+
+<div id="insights"></div>
+
+</div>
+
+<!-- API SCRIPT -->
+<script>
+fetch("/api/dashboard")
+.then(response => response.json())
+.then(data => {
+
+document.getElementById("total").innerText = data.total
+document.getElementById("open").innerText = data.open_tickets
+document.getElementById("high").innerText = data.high_priority
+document.getElementById("closed").innerText = data.closed_tickets
+
+let insights = ""
+
+if(data.high_priority > 0){
+insights += `<div class="alert alert-danger">
+⚠️ High priority tickets need immediate attention.
+</div>`
+}
+else{
+insights += `<div class="alert alert-success">
+✅ No high priority tickets currently.
+</div>`
+}
+
+if(data.open_tickets > 10){
+insights += `<div class="alert alert-info">
+📌 Ticket load is high. Consider scaling support.
+</div>`
+}
+else if(data.open_tickets > 0){
+insights += `<div class="alert alert-info">
+📌 Ticket load is manageable.
+</div>`
+}
+else{
+insights += `<div class="alert alert-success">
+🎉 No open tickets — system is clear!
+</div>`
+}
+
+document.getElementById("insights").innerHTML = insights
+
+})
+
+</script>
+
+{% endblock %}
